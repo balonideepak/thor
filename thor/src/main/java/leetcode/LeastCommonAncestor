@@ -1,0 +1,124 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class LeastCommonAncestor {
+
+
+    private static Node root;
+
+    public static void main(String[] args) {
+
+        //initialise
+        Node root = initiliaseTheTree();
+
+
+        //use case : child check as part of the common parent
+        //use case : multiple child check as part of the common parent
+
+        /**
+         * Input Target employees - Step 1 : Mona, Lisa -> Company,
+         *                          Step 2 : Company , Bob
+         * Output: Company
+         *
+         * Input Target employees - Lisa, Marley  -> Done
+         * Output: FE
+         *
+         * Input Target employees - Alice, Marley -> Done
+         * Output: Engg
+         *
+         */
+
+        List<Node> inputList = new ArrayList<>();
+        inputList.add(new Node("Mona"));
+        inputList.add(new Node("Lisa"));
+        inputList.add(new Node("Bob"));
+
+        Node result = findTheLeastCommonAmongTheChilds(root, inputList.get(0), inputList.get(1));
+
+        for (int i = 2; i < inputList.size(); i++) {
+            result = findTheLeastCommonAmongTheChilds(root, result, inputList.get(i));
+        }
+
+        System.out.println(result);
+
+
+    }
+
+
+    /**
+     * initialise the tree / hirerachy
+     */
+    private static Node initiliaseTheTree() {
+        Node root = new Node("Company");
+        root.left = new Node("HR");
+        root.right = new Node("Engg");
+
+        root.left.left = new Node("Mona");
+        root.left.right = new Node("Springs");
+
+        root.right.left = new Node("BE");
+        root.right.left.left = new Node("Alice");
+        root.right.left.right = new Node("Bob");
+
+        root.right.right = new Node("FE");
+        root.right.right.left = new Node("Lisa");
+        root.right.right.right = new Node("Marley");
+
+        return root;
+    }
+
+
+    /*
+     * Identify the common parent for the children provided
+     *
+     * @Param : input1 , input2 TreeNode that holds the child value
+     * @return : The least common parent
+     * */
+    private static Node findTheLeastCommonAmongTheChilds(Node root, Node input1, Node input2) {
+
+        if (root == null) {
+            return null;
+        }
+
+        if (root.name == input1.name || root.name == input2.name) {
+            return root;
+        }
+
+        Node leftLCA = findTheLeastCommonAmongTheChilds(root.left, input1, input2);
+        Node rightLCA = findTheLeastCommonAmongTheChilds(root.right, input1, input2);
+
+
+        //matching
+        if (leftLCA != null && rightLCA != null) {
+            return root;
+        }
+
+        return leftLCA != null ? leftLCA : rightLCA;
+
+    }
+
+
+    /*
+    Data structure to hold the information of a employee / department
+    */
+    static class Node {
+        Node left;
+        Node right;
+
+        String name;
+        String type;//representing the employee / dept -> ENUM
+
+
+        public Node(String name) {
+            this.name = name;
+        }
+
+
+        @Override
+        public String toString() {
+            return "Node{" +
+                    "name='" + name + '\'' +
+                    '}';
+        }
+    }
+}
