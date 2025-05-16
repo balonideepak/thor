@@ -1,0 +1,26 @@
+class GenerateParenthesisDemo {
+    public List<String> generateParenthesis(int n) {
+        List<String> result = new ArrayList<>();
+        _generateParenthesis(n, n, result, "");
+        return result;
+
+    }
+
+    private void _generateParenthesis(int openBracketsCount, int closedBracketsCount,
+            List<String> result, String localResult) {
+
+        if (openBracketsCount == 0 && closedBracketsCount == 0 ) {
+            result.add(localResult);
+            return;
+        }
+
+        if (openBracketsCount > 0) {
+            _generateParenthesis(openBracketsCount-1, closedBracketsCount, result, localResult + "(" );
+        }
+
+        if (closedBracketsCount > openBracketsCount) {
+            _generateParenthesis(openBracketsCount, closedBracketsCount-1, result, localResult + ")" );
+        }
+
+    }
+}
